@@ -10,6 +10,8 @@ import requests
 import streamlit as st
 from dotenv import load_dotenv
 
+from commercial_view import render_commercial_view
+
 
 # ==========================================================
 # CONFIGURACIÓN GENERAL
@@ -24,7 +26,7 @@ st.set_page_config(
     page_title="Catusita · Evaluación de crédito",
     page_icon="💳",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 st.markdown(
@@ -34,12 +36,6 @@ st.markdown(
             padding-top: 1.2rem;
             padding-bottom: 2.5rem;
             max-width: 1550px;
-        }
-        [data-testid="stSidebar"] {
-            display: none;
-        }
-        [data-testid="collapsedControl"] {
-            display: none;
         }
         .client-label {
             color: #5f6b7a;
@@ -134,6 +130,26 @@ def run_query(filename, params):
         return pd.read_sql_query(load_sql(filename), conn, params=params)
     finally:
         conn.close()
+
+
+# ==========================================================
+# NAVEGACIÓN
+# ==========================================================
+
+with st.sidebar:
+    st.markdown("## Catusita")
+    st.caption("Crédito y cobranza")
+    vista_principal = st.radio(
+        "Navegación",
+        ["💳 Evaluación de cliente", "📈 Oportunidades comerciales"],
+        label_visibility="collapsed",
+        key="vista_principal",
+    )
+    st.divider()
+
+if vista_principal == "📈 Oportunidades comerciales":
+    render_commercial_view(run_query)
+    st.stop()
 
 
 # ==========================================================
