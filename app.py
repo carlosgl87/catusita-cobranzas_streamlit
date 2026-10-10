@@ -10,6 +10,8 @@ import requests
 import streamlit as st
 from dotenv import load_dotenv
 
+from commercial_view import render_commercial_view
+
 
 # ==========================================================
 # CONFIGURACIÓN GENERAL
@@ -454,6 +456,23 @@ def evaluate_operation(row, monto_solicitado, numero_letras):
         "capacidad": capacidad,
         "exceso": exceso,
     }
+
+
+# ==========================================================
+# NAVEGACIÓN
+# ==========================================================
+
+vista_principal = st.radio(
+    "Vista",
+    ["Evaluación de cliente", "Oportunidades comerciales"],
+    horizontal=True,
+    label_visibility="collapsed",
+    key="vista_principal",
+)
+
+if vista_principal == "Oportunidades comerciales":
+    render_commercial_view(run_query)
+    st.stop()
 
 
 # ==========================================================
